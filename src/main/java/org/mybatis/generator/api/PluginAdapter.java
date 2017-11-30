@@ -123,6 +123,9 @@ public abstract class PluginAdapter implements Plugin {
 		return true;
 	}
 
+	/**
+	 * 生成dao
+	 */
 	public boolean clientGenerated(Interface interfaze, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
 		return true;
 	}
@@ -217,6 +220,15 @@ public abstract class PluginAdapter implements Plugin {
 		return true;
 	}
 
+	/**
+	 * 生成实体
+	 * @param topLevelClass
+	 *            the generated base record class
+	 * @param introspectedTable
+	 *            The class containing information about the table as
+	 *            introspected from the database
+	 * @return
+	 */
 	public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
 		addSerialVersionUID(topLevelClass, introspectedTable);
 		return true;
@@ -244,6 +256,9 @@ public abstract class PluginAdapter implements Plugin {
 		return true;
 	}
 
+	/**
+	 * 生成实体中每个属性
+	 */
 	public boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass,
 			IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable,
 			Plugin.ModelClassType modelClassType) {
@@ -280,6 +295,9 @@ public abstract class PluginAdapter implements Plugin {
 		return true;
 	}
 
+	/**
+	 * 生成mapping 添加自定义sql
+	 */
 	public boolean sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable) {
 		String tableName = introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime();// 数据库表名
 		List<IntrospectedColumn> columns = introspectedTable.getAllColumns();
@@ -327,12 +345,22 @@ public abstract class PluginAdapter implements Plugin {
 		return true;
 	}
 
+	/**
+	 * 生成mapping
+	 * @param sqlMap
+	 *            the generated file (containing the file name, package name,
+	 *            and project name)
+	 * @param introspectedTable
+	 *            The class containing information about the table as
+	 *            introspected from the database
+	 * @return
+	 */
 	public boolean sqlMapGenerated(GeneratedXmlFile sqlMap, IntrospectedTable introspectedTable) {
 		return true;
 	}
 
 	public boolean sqlMapInsertElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-		return true;
+		return false;
 	}
 
 	public boolean sqlMapResultMapWithBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
@@ -380,7 +408,7 @@ public abstract class PluginAdapter implements Plugin {
 
 	public boolean sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(XmlElement element,
 			IntrospectedTable introspectedTable) {
-		return true;
+		return false;
 	}
 
 	public boolean sqlMapInsertSelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
