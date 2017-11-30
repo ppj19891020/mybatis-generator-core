@@ -31,6 +31,7 @@ import org.mybatis.generator.api.dom.java.InnerClass;
 import org.mybatis.generator.api.dom.java.InnerEnum;
 import org.mybatis.generator.api.dom.java.JavaElement;
 import org.mybatis.generator.api.dom.java.Method;
+import org.mybatis.generator.api.dom.java.Parameter;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.config.MergeConstants;
 import org.mybatis.generator.config.PropertyRegistry;
@@ -173,13 +174,9 @@ public class DefaultCommentGenerator implements CommentGenerator {
 
 		String remark = introspectedColumn.getRemarks();
 		if (remark != null && remark.length() != 0) {
-			field.addJavaDocLine("/**"); //$NON-NLS-1$
-			sb.append(" * "); //$NON-NLS-1$
-			remark = remark.replaceAll(OutputUtilities.lineSeparator,
-					"<br>" + OutputUtilities.lineSeparator + "\t * ");
-			sb.append(remark);
-			field.addJavaDocLine(sb.toString());
-			field.addJavaDocLine(" */"); //$NON-NLS-1$
+			field.addJavaDocLine("/**");
+			field.addJavaDocLine(" * @Fields "+field.getName()+" "+introspectedColumn.getRemarks());
+			field.addJavaDocLine(" */");
 		}
 	}
 
@@ -201,17 +198,19 @@ public class DefaultCommentGenerator implements CommentGenerator {
 		if (suppressAllComments) {
 			return;
 		}
-
 		StringBuilder sb = new StringBuilder();
 		String remark = comments;
 		if (remark != null && remark.length() != 0) {
-			method.addJavaDocLine("/**"); //$NON-NLS-1$
-			sb.append(" * "); //$NON-NLS-1$
-			remark = remark.replaceAll(OutputUtilities.lineSeparator,
-					"<br>" + OutputUtilities.lineSeparator + "\t * ");
-			sb.append(remark);
-			method.addJavaDocLine(sb.toString());
-			method.addJavaDocLine(" */"); //$NON-NLS-1$
+			method.addJavaDocLine("/**");
+			method.addJavaDocLine(" * @Title " + method.getName());
+			for (Parameter parameter : method.getParameters()) {
+				method.addJavaDocLine(" * @param " + parameter.getName());
+			}
+			String returnType = method.getReturnType().toString();
+			returnType = returnType.lastIndexOf(".") != -1 ? returnType.substring(returnType.lastIndexOf(".") + 1) : returnType;
+			method.addJavaDocLine(" * @return " + returnType);
+			method.addJavaDocLine(" */");
+
 		}
 	}
 
@@ -220,39 +219,12 @@ public class DefaultCommentGenerator implements CommentGenerator {
 		if (suppressAllComments) {
 			return;
 		}
-
-		StringBuilder sb = new StringBuilder();
-		String remark = introspectedColumn.getRemarks();
-
-		if (remark != null && remark.length() != 0) {
-			method.addJavaDocLine("/**");
-			sb.append(" * @return ");
-			remark = remark.replaceAll(OutputUtilities.lineSeparator,
-					"<br>" + OutputUtilities.lineSeparator + "\t *         ");
-
-			sb.append(remark);
-			method.addJavaDocLine(sb.toString());
-			method.addJavaDocLine(" */");
-		}
 	}
 
 	public void addSetterComment(Method method, IntrospectedTable introspectedTable,
 			IntrospectedColumn introspectedColumn) {
 		if (suppressAllComments) {
 			return;
-		}
-
-		StringBuilder sb = new StringBuilder();
-		String remark = introspectedColumn.getRemarks();
-
-		if (remark != null && remark.length() != 0) {
-			method.addJavaDocLine("/**");
-			sb.append(" * @param " + JavaBeansUtil.getCamelCaseString(introspectedColumn.getActualColumnName(), false) + " "); //$NON-NLS-1$
-			remark = remark.replaceAll(OutputUtilities.lineSeparator,
-					"<br>" + OutputUtilities.lineSeparator + "\t *            ");
-			sb.append("" + OutputUtilities.lineSeparator + "\t *            " + remark);
-			method.addJavaDocLine(sb.toString());
-			method.addJavaDocLine(" */"); //$NON-NLS-1$
 		}
 	}
 
